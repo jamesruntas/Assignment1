@@ -163,14 +163,20 @@ public class Game
         else if (commandWord.equals("eat")) {
             eat(command);
         }
-        else if (commandWord.equals("grab")) {
-            grab(command);
+        else if (commandWord.equals("take")) {
+            take(command);
         }
         else if (commandWord.equals("back")) {
             back(command);
         }
         else if (commandWord.equals("stackBack")) {
             stackBack(command);
+        }
+        else if (commandWord.equals("backpack")) {
+            backpack();
+        }
+        else if (commandWord.equals("drop")) {
+            drop(command);
         }
         // else command not recognised.
         return wantToQuit;
@@ -342,11 +348,11 @@ public class Game
      * 
      * @param command The command to be processed
      */
-    private void grab(Command command) 
+    private void take(Command command) 
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go to pick up item...
-            System.out.println("Grab where?");
+            System.out.println("take where?");
             return;
         }
 
@@ -363,6 +369,62 @@ public class Game
             backpack.add(grabbedItem); //add to backpack 
             
         }
+    }
+
+
+    /*
+     * Drops item in backpack using simple index numbering system
+     * User should use backpack command in order to get the index of each item 'drop 1'
+     * 
+     */
+    public void drop(Command command){
+        String userIndex = command.getSecondWord();
+        int itemIndex = convert(userIndex);
+        itemIndex--;
+        try {
+            backpack.remove(itemIndex);
+            System.out.println("Item dropped!");
+          }
+          catch(Exception e) {
+            
+          }
+          
+
+    }
+
+    /*
+     * Simple function from geeksforgeeks.com to convert string to int
+     * used for converting user inputed backpack item index to int
+     */
+    public static int convert(String str)
+    {
+        int val = 0;
+  
+        // Convert the String
+        try {
+            val = Integer.parseInt(str);
+        }
+        catch (NumberFormatException e) {
+  
+            // This is thrown when the String
+            // contains characters other than digits
+            System.out.println("Invalid String");
+        }
+        return val;
+    }
+
+    /*
+     * Returns a text output of all acquired items in the players backpack.
+     * an index i is used to number all items, making it easier to drop items. 'drop i'
+     * 
+     */
+    public void backpack(){
+        int i = 1;
+        for (Item item : backpack){
+            System.out.println(i + ": "+ item.getInfo()); //output items grabbed
+            i++;
+        }
+           
     }
 
     public static void main(String[] args){
