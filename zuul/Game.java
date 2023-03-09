@@ -479,27 +479,43 @@ public class Game
            
     }
 
+
+    /*
+     * Charge the beamer item if the player has a beamer in thier backpack. 
+     * Make note of the current room the player charged it in for when to go when they fire it. 
+     * 
+     */
     public void charge(){
-        for (Item i : backpack){
-            if(i.getName(i)=="Beamer"){
-                Beamer iBeamer = (Beamer)i;
-                iBeamer.chargeBeamer(currentRoom);
+        for (Item i : backpack){  // look through backpack
+            if(i.getName(i)=="Beamer"){     //found the beamer item
+                Beamer iBeamer = (Beamer)i;      //convert beamer item to beamer to access its functions
+                iBeamer.chargeBeamer(currentRoom);   //use beamer class to charge it in the current room
                 System.out.println("Beamer has been charged in room: " + currentRoom.getShortDescription()) ;
+                return;
             }
             break;
         }
+
+        System.out.println("No beamer in backpack");  
+
     }
 
-    public void fire(){
-        for (Item i : backpack){
-            if(i.getName(i)=="Beamer"){
-                Beamer iBeamer = (Beamer)i;
-                if (iBeamer.getCharge()==true){
-                    System.out.println("Firing Beamer");
-                    iBeamer.fireBeamer();
-                    this.currentRoom = iBeamer.getChargeRoom();
-                    System.out.println("Now in beamer charged room: " + currentRoom.getShortDescription());
 
+    /*
+     * fire the beamer if the beamer is charged and is in their backpack
+     * will send the player to the room they initally charged it in. 
+     * 
+     */
+    public void fire(){
+        for (Item i : backpack){  //look through backpack
+            if(i.getName(i)=="Beamer"){    //find beamer
+                Beamer iBeamer = (Beamer)i;  //convert beamer item 
+                if (iBeamer.getCharge()==true){    //make sure beamer is charged
+                    System.out.println("Firing Beamer");  
+                    iBeamer.fireBeamer();     //resets charge to false
+                    this.currentRoom = iBeamer.getChargeRoom();   //send player to the charged room
+                    System.out.println("Now in: " + currentRoom.getShortDescription());
+                    return;
                 }
                 else{
                     System.out.println("Beamer not charged");
@@ -508,7 +524,7 @@ public class Game
             }
             break;
         }
-
+        System.out.println("No beamer in backpack");  
     }
 
     public static void main(String[] args){
