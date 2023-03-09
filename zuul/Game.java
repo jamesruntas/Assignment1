@@ -56,20 +56,21 @@ public class Game
      */
     private void createRooms()
     {
-        Room outside, theatre, pub, lab, office; //5 rooms 
+        Room outside, theatre, pub, lab, office, dorm; //6 rooms 
       
         // create the rooms and their identifiers 
         outside = new Room("outside the main entrance of the university", "outside");
         theatre = new Room("in a lecture theatre", "theatre");
         pub = new Room("in the campus pub", "pub");
+        dorm = new Room("Lennox and Addington", "dorm");
         lab = new Room("in a computing lab", "lab");
         office = new Room("in the computing admin office", "office");
         
         //create the item objects 
+        Beamer beamer = new Beamer("Beamer device", 10.0, "Beamer");
         Item chestArmor = new Item("Level One bronze Armor", 50.0, "Chest Armor");
         Item helmet = new Item("Level One bronze Helmet", 50.0, "Helmet");
         Item sword = new Item("Level One wooden Sword", 50.0, "Sword");
-        Item cat = new Item("a black cat, grants lucky perk", 50.0, "Cat");
         Item shield = new Item("Level one wooden shield ", 50.0, "Shield");
         Item bigChungus = new Item("a huge chungus, grants +500 carrying capacity", 500.0, "Big Chungus");
         Item cookie = new Item("edible cookie, cure hunger",1.0, "Cookie");
@@ -79,7 +80,10 @@ public class Game
         outside.setExit("south", lab);
         outside.setExit("west", pub);
         theatre.setExit("west", outside);
+        pub.setExit("south", dorm);
         pub.setExit("east", outside);
+        dorm.setExit("west", outside);
+        dorm.setExit("north", pub);
         lab.setExit("north", outside);
         lab.setExit("east", office);
         office.setExit("west", lab);
@@ -88,8 +92,9 @@ public class Game
         outside.setItem("north", cookie);
         theatre.setItem("east", sword);
         theatre.setItem("south", cookie);
+        dorm.setItem("east", beamer);
         pub.setItem("south", helmet);
-        lab.setItem("south", cat);
+        lab.setItem("south", beamer);
         lab.setItem("west", bigChungus);
         office.setItem("north", shield);
         office.setItem("east", chestArmor);
@@ -181,6 +186,13 @@ public class Game
         else if (commandWord.equals("drop")) {
             drop(command);
         }
+        else if (commandWord.equals("charge")) {
+            charge();
+        }
+        else if (commandWord.equals("fire")) {
+            fire();
+        }
+
         // else command not recognised.
         return wantToQuit;
     }
@@ -373,16 +385,6 @@ public class Game
      */
     private void take(Command command) 
     {
-        if(Game.this.hungry == true){ //player must eat cookie before taking items
-            System.out.println("You must find and eat a cookie before picking up items. Hint: Outside north, theatre south");
-            for (Item item : backpack){  //help the user by looking through thier items to find a cookie
-                if(item.getName(item)=="Cookie"){
-                    System.out.println("I see you have a cookie in your backpack, use 'eat' command");
-                }
-            }
-            return;
-        }
-
         if(backpack.size() >= 5){
             System.out.println("You are carrying to much!");
             return;
@@ -403,6 +405,18 @@ public class Game
             System.out.println("There is no item!"); // direction chosen has no item 
         }
         else {
+            if(grabbedItem.getName(grabbedItem)!="Cookie"){
+                if(Game.this.hungry == true){ //player must eat cookie before taking items
+                    System.out.println("You must find and eat a cookie before picking up items. Hint: Outside north, theatre south");
+                        for (Item item : backpack){  //help the user by looking through thier items to find a cookie
+                            if(item.getName(item)=="Cookie"){
+                                System.out.println("I see you have a cookie in your backpack, use 'eat' command");
+                            }
+                        }
+                    return;
+                }
+            }
+            
             System.out.println("Grabbed " + grabbedItem.getInfo()); //output info
             backpack.add(grabbedItem); //add to backpack 
             
@@ -463,6 +477,21 @@ public class Game
             i++;
         }
            
+    }
+
+    public void charge(){
+        for (Item i : backpack){
+            if(i.getName(i)=="Beamer"){
+                Beamer iBeamer = (Beamer)i;
+                iBeamer.chargeBeamer(currentRoom);
+                System.out.println("Beamer has been charged in room: " + currentRoom) ;
+            }
+            break;
+        }
+    }
+
+    public void fire(){
+
     }
 
     public static void main(String[] args){
