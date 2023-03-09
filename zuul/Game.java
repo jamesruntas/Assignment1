@@ -72,6 +72,7 @@ public class Game
         Item cat = new Item("a black cat, grants lucky perk", 50.0, "Cat");
         Item shield = new Item("Level one wooden shield ", 50.0, "Shield");
         Item bigChungus = new Item("a huge chungus, grants +500 carrying capacity", 500.0, "Big Chungus");
+        Item cookie = new Item("edible cookie, cure hunger",1.0, "Cookie");
 
         // initialise room exits and linked to the next room
         outside.setExit("east", theatre);
@@ -84,12 +85,14 @@ public class Game
         office.setExit("west", lab);
 
         // initialise room items, what item and where they are stashed
-        outside.setItem("north", chestArmor);
+        outside.setItem("north", cookie);
         theatre.setItem("east", sword);
+        theatre.setItem("south", cookie);
         pub.setItem("south", helmet);
         lab.setItem("south", cat);
         lab.setItem("west", bigChungus);
         office.setItem("north", shield);
+        office.setItem("east", chestArmor);
 
 
         currentRoom = outside;  // start game outside
@@ -161,7 +164,7 @@ public class Game
             lookAround(command);
         }
         else if (commandWord.equals("eat")) {
-            eat(command);
+            eat();
         }
         else if (commandWord.equals("take")) {
             take(command);
@@ -330,15 +333,31 @@ public class Game
         }
     }
     
-    /**Player eats something to reset hunger 
+    /**Player eats cookie to reset hunger 
     * @param command The command to be processed
     * @return void, only prints
     */
-    private void eat(Command command) 
+    private void eat() 
     {
-        //change the players hungry value
-        Game.this.hungry = false;
-        System.out.println("Player hunger status: " + Game.this.hungry);
+        Boolean cookieFlag = false;   //a flag that helps keep track of if a cookie was found to eat
+        for (Item item : backpack){
+            if (item.getName(item)=="Cookie"){
+                //change the players hungry value
+                Game.this.hungry = false;
+                System.out.println("Cookie eaten, Player hunger status: " + Game.this.hungry);
+
+                //remove cookie from backpack
+                backpack.remove(item);
+                cookieFlag = true;
+                break;
+
+            }
+        }
+        if (cookieFlag == false){  //if the code above did not trigger eating a cookie
+            System.out.println("no cookie to eat. Hungry: "+ Game.this.hungry);
+        }
+        
+
     }
 
 
@@ -346,10 +365,29 @@ public class Game
      * Try to grab an item in a certain direction. If there is an item, add to backpack and show item info
      * otherwise print an error message. item will not be in same direction as an exit, therefore player always stays in same room
      * 
+     * only take items when the player has eaten a cookie. this is determined by our hunger 'meter'.
+     * I will check the hunger meter to see if the player has found and eaten the cookie
+     * I will also check the users backpack to see if they forgot to eat the cookie. 
+     * 
      * @param command The command to be processed
      */
     private void take(Command command) 
     {
+        if(Game.this.hungry == true){ //player must eat cookie before taking items
+            System.out.println("You must find and eat a cookie before picking up items. Hint: Outside north, theatre south");
+            for (Item item : backpack){  //help the user by looking through thier items to find a cookie
+                if(item.getName(item)=="Cookie"){
+                    System.out.println("I see you have a cookie in your backpack, use 'eat' command");
+                }
+            }
+            return;
+        }
+
+        if(backpack.size() >= 5){
+            System.out.println("You are carrying to much!");
+            return;
+        }
+
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go to pick up item...
             System.out.println("take where?");

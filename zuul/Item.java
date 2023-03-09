@@ -30,7 +30,9 @@ public class Item {
         System.out.println("> " + this.name + ": " + this.description + " weight: " + this.weight);
     }
 
-
+    public String getName(Item something){
+        return this.name;
+    }
 
     //return string for item description 
     public String getInfo() {
