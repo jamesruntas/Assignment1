@@ -491,6 +491,23 @@ public class Game
     }
 
     public void fire(){
+        for (Item i : backpack){
+            if(i.getName(i)=="Beamer"){
+                Beamer iBeamer = (Beamer)i;
+                if (iBeamer.getCharge()==true){
+                    System.out.println("Firing Beamer");
+                    iBeamer.fireBeamer();
+                    this.currentRoom = iBeamer.getChargeRoom();
+                    System.out.println("Now in beamer charged room: " + currentRoom.getShortDescription());
+
+                }
+                else{
+                    System.out.println("Beamer not charged");
+                    return;
+                }
+            }
+            break;
+        }
 
     }
 
