@@ -484,7 +484,7 @@ public class Game
             if(i.getName(i)=="Beamer"){
                 Beamer iBeamer = (Beamer)i;
                 iBeamer.chargeBeamer(currentRoom);
-                System.out.println("Beamer has been charged in room: " + currentRoom) ;
+                System.out.println("Beamer has been charged in room: " + currentRoom.getShortDescription()) ;
             }
             break;
         }
