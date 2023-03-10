@@ -28,7 +28,7 @@ import java.util.Iterator;
 public class Room 
 {
     private String description;
-    private HashMap<String, Room> exits;        // stores exits of this room.
+    protected HashMap<String, Room> exits;        // stores exits of this room.
     private HashMap<String, Item> items; //stores the items of this room, can be in different directions of the room
     private String id;
 

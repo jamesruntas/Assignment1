@@ -34,18 +34,20 @@ public class Game
     private Room previousRoom;    //previous room is a room object
     private Boolean hungry;     //hungry yes or no
     private  ArrayList<Item> backpack; // store items picked up by users
-
+    public ArrayList<Room> roomList;
 
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        createRooms();    //line 53 function
+        roomList = new ArrayList<Room>();
+        createRooms();    
         parser = new Parser();
         hungry = true;
         backpack = new ArrayList<Item>();
         previousRooms = new Stack<Room>();
+
     }
 
     /**
@@ -57,15 +59,29 @@ public class Game
     private void createRooms()
     {
         Room outside, theatre, pub, lab, office, dorm; //6 rooms 
+        TransporterRoom transportRoom;
       
         // create the rooms and their identifiers 
+        
         outside = new Room("outside the main entrance of the university", "outside");
         theatre = new Room("in a lecture theatre", "theatre");
         pub = new Room("in the campus pub", "pub");
         dorm = new Room("Lennox and Addington", "dorm");
         lab = new Room("in a computing lab", "lab");
         office = new Room("in the computing admin office", "office");
+
+        //add to the list of room objects for use in picking a random room in transporter room.
+        roomList.add(outside);
+        roomList.add(theatre);
+        roomList.add(pub);
+        roomList.add(dorm);
+        roomList.add(lab);
+        roomList.add(office);
         
+        //after all rooms are added to the list, then create the transporter room which takes this list as an input.
+        transportRoom = new TransporterRoom("in the transporter room", "transportRoom", roomList);
+
+
         //create the item objects 
         Beamer beamer = new Beamer("Beamer device", 10.0, "Beamer");
         Item chestArmor = new Item("Level One bronze Armor", 50.0, "Chest Armor");
@@ -80,6 +96,7 @@ public class Game
         outside.setExit("south", lab);
         outside.setExit("west", pub);
         theatre.setExit("west", outside);
+        theatre.setExit("north", transportRoom);
         pub.setExit("south", dorm);
         pub.setExit("east", outside);
         dorm.setExit("west", outside);
