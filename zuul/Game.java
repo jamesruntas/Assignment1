@@ -510,7 +510,7 @@ public class Game
                 System.out.println("Beamer has been charged in room: " + currentRoom.getShortDescription()) ;
                 return;
             }
-            break;
+
         }
 
         System.out.println("No beamer in backpack");  
@@ -539,7 +539,6 @@ public class Game
                     return;
                 }
             }
-            break;
         }
         System.out.println("No beamer in backpack");  
     }
